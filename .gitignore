@@ -1,0 +1,9 @@
+*.o
+*.a
+a.out
+*.gch
+*.swp
+*.swo
+pipex
+outfile
+infile
