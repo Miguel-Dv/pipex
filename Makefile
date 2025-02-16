@@ -6,15 +6,15 @@
 #    By: miggarc2 <miggarc2@student.42barcelona.co  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/18 19:51:13 by miggarc2          #+#    #+#              #
-#    Updated: 2025/02/06 19:01:50 by miggarc2         ###   ########.fr        #
+#    Updated: 2025/02/11 20:49:27 by miggarc2         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC= cc
-CFLAGS= -Wall -Wextra -Werror -I .
+CFLAGS= -Wall -Wextra -Werror -I includes -I libft 
 RM= rm -f
 NAME= pipex
-INC= includes/pipex.h
+INC= pipex.h
 LIB= libft/libft.a
 SRC= src/pipex.c
 OBJ= ${SRC:.c=.o}
