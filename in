@@ -1,0 +1,56 @@
+The Summons
+Once upon a time in the bustling city of Barcelona, there lived a dedicated student named Miquel. Miquel was no ordinary student; he was a warrior of code, a knight of the terminal. His latest quest was to master the arcane arts of pipex, a challenging yet essential component of his journey to become a master programmer.
+
+The Preparation
+Miquel prepared himself for the quest ahead. He gathered his tools:
+
+A trusty computer with a Linux-based operating system, the battleground for his programming duels.
+
+A robust text editor, his weapon of choice to write and edit his code.
+
+A compiler to transform his human-readable code into machine-executable instructions.
+
+Terminal skills to navigate the digital landscape with ease.
+
+The Initial Steps
+Miquel's quest began with understanding the essence of pipex. He needed to handle file descriptors, manage processes, and establish communication between them using pipes. Here's how he approached the task, step by step:
+
+Understanding the Requirements:
+
+Miquel read the project requirements carefully. He needed to create a program that would execute commands in a pipeline, similar to how the shell handles ls | grep main.
+
+Setting Up the Project Structure:
+
+He created a well-organized directory structure for his project, ensuring all files and packages were in their proper places.
+
+Writing the Header File:
+
+He defined the necessary includes, macros, and function prototypes, setting the foundation for the program.
+
+Implementing the Main Function:
+
+The main function would parse the command-line arguments, create pipes, and fork processes to handle each command in the pipeline.
+
+Implementing the Command Execution Function:
+
+This function would handle the redirection of input/output and execution of the commands, ensuring that each command in the pipeline was executed correctly.
+
+Creating a Makefile:
+
+To compile the project easily, Miquel created a Makefile, streamlining the compilation process and ensuring that all dependencies were managed effectively.
+
+The Battle
+Miquel faced numerous challenges along the way:
+
+Debugging: He encountered segmentation faults and permission errors, which he meticulously debugged using tools like gdb and strace.
+
+Optimization: He optimized his code to handle multiple commands and edge cases efficiently.
+
+Testing: He tested his program with various input scenarios to ensure robustness and reliability.
+
+The Victory
+After countless hours of coding, debugging, and testing, Miquel emerged victorious. His pipex program worked flawlessly, generating admiration from his peers and mentors. He had successfully completed his quest, mastering the complexities of Unix pipelines and C programming.
+
+Miquel's journey was not just about coding; it was about perseverance, problem-solving, and the relentless pursuit of excellence. He had proven himself as a true warrior of code, ready to face any challenge that lay ahead.
+
+And so, the legend of Miquel, the brave student who conquered pipex, was born, inspiring future generations of coders to embark on their own heroic quests in the realm of programming. 🚀👨‍💻🎉
