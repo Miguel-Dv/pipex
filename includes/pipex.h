@@ -6,7 +6,7 @@
 /*   By: miggarc2 <miggarc2@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 17:10:44 by miggarc2          #+#    #+#             */
-/*   Updated: 2025/02/21 20:30:14 by miggarc2         ###   ########.fr       */
+/*   Updated: 2025/02/25 01:42:30 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,10 @@
 
 typedef struct s_var
 {
+	int		*pipes;
 	int		fd_in;
 	int		fd_out;
-	char	**folders;
 	char	***cmds;
-	int		pipe_in[2];
-	int		pipe_out[2];
-}				t_var;
+}			t_var;
 
 #endif

@@ -6,13 +6,13 @@
 /*   By: miggarc2 <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 19:02:08 by miggarc2          #+#    #+#             */
-/*   Updated: 2025/02/23 03:42:29 by miggarc2         ###   ########.fr       */
+/*   Updated: 2025/02/25 01:57:20 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	ft_clean_mem(t_var *var)
+void	ft_clean_mem(t_var *var, char **folders)
 {
 	int	i;
 	int	j;
@@ -23,58 +23,106 @@ void	ft_clean_mem(t_var *var)
 		while (var->cmds[i])
 		{
 			j = 0;
-			while(var->cmds[i][j])
+			while (var->cmds[i][j])
 				free(var->cmds[i][j++]);
 			free(var->cmds[i++]);
 		}
 		free(var->cmds);
 	}
-	if (var->folders)
+	if (folders)
 	{
 		i = 0;
-		while (var->folders[i])
-			free(var->folders[i++]);
-		free(var->folders);
+		while (folders[i])
+			free(folders[i++]);
+		free(folders);
 	}
 }
 
 //void	ft_error_handle(
 
-char	**ft_cmd_check(char **folders, char *av)
+void	ft_cmd_check(char ***args, char **folders, char *av)
 {
 	char	*tmp;
 	char	*cmd;
-	char	**args;
 
-	cmd = NULL;
-	args = ft_split(av, ' ');
-	while (!cmd && *folders)
+	*args = ft_split(av, ' ');
+	while (*(++folders))
 	{
-		if (strncmp(args[0], "/", 1))
+		if (strncmp(*args[0], "/", 1) != 0)
 		{
-			tmp = ft_strjoin(*folders++, "/");
-			cmd = ft_strjoin(tmp, args[0]);
+			tmp = ft_strjoin(*folders, "/");
+			cmd = ft_strjoin(tmp, *args[0]);
 			free(tmp);
 		}
-		if (access(cmd, X_OK) < 0)
-		{
+		else
+			cmd = ft_strdup(*args[0]);
+		if (access(cmd, X_OK) == 0)
+			break ;
+		else
 			free(cmd);
-			cmd = NULL;
-		}
 	}
-	if (cmd)
-		free(cmd);
+	tmp = *args[0];
+	*args[0] = cmd;
+	free(tmp);
+	if (!*folders)
+		exit(EXIT_FAILURE);
+}
+
+void	ft_exec_child(t_var *var, int i, int end)
+{
+	if (i == 0)
+	{
+		close(var->pipes[2 * i]);
+		dup2(var->fd_in, STDIN_FILENO);
+		dup2(var->pipes[2 * i + 1], STDOUT_FILENO);
+	}
+	else if (i < end)
+	{
+		close(var->pipes[2 * i]);
+		dup2(var->pipes[2 * i - 2], STDIN_FILENO);
+		dup2(var->pipes[2 * i + 1], STDOUT_FILENO);
+	}
 	else
-		perror(strerror(errno));
-	return (args);
+	{
+		dup2(var->pipes[2 * i - 2], STDIN_FILENO);
+		dup2(var->fd_out, STDOUT_FILENO);
+	}
+	execve(var->cmds[i][0], var->cmds[i], NULL);
+}
+
+void	ft_pipex(t_var *var, int end)
+{
+	int		i;
+	int		status;
+	pid_t	child;
+
+	var->pipes = (int *)ft_calloc(end * 2, sizeof(int));
+	if (!var->pipes)
+		exit(EXIT_FAILURE);
+	i = -1;
+	while (var->cmds[++i])
+	{
+		if (i < end && pipe(&var->pipes[2 * i]) < 0)
+			exit(EXIT_FAILURE);
+		child = fork();
+		if (child < 0)
+			exit(EXIT_FAILURE);
+		else if (child == 0)
+			ft_exec_child(var, i, end);
+		waitpid(child, &status, 0);
+		if (!WIFEXITED(status))
+			perror("child");
+		if (i < end)
+			close(var->pipes[2 * i + 1]);
+	}
+	free(var->pipes);
 }
 
 int	main(int ac, char **av, char **env)
 {
 	int		i;
-	int		status;
-	pid_t	child;
 	t_var	var;
+	char	**folders;
 
 	if (ac < 5)
 		return (0);
@@ -84,47 +132,17 @@ int	main(int ac, char **av, char **env)
 		return (0);
 	var.cmds = (char ***)ft_calloc(ac - 2, sizeof(char **));
 	i = 0;
-	if (!env || !env[i])
-		return (0);
 	while (env[i] && ft_strncmp(env[i], "PATH=", 5))
 		i++;
 	if (!env[i])
 		return (0);
-	var.folders = ft_split(env[i] + 5, ':');
+	folders = ft_split(env[i] + 5, ':');
 	i = -1;
 	while (++i < ac - 3)
-		var.cmds[i] = ft_cmd_check(var.folders, av[i + 2]);
-	i = -1;
-	if (var.cmds[++i])
-	{
-		if (pipe(var.pipe_in) < 0 || pipe(var.pipe_out) < 0)
-			return (0);
-		child = fork();
-		ft_printf("cmd: %s\n", var.cmds[0][0]);
-		if (child < 0)
-			return (0);
-		else if (child == 0)
-		{
-			close(var.pipe_in[0]);
-			if (dup2(var.fd_in, STDIN_FILENO) < 0 || \
-					dup2(var.pipe_in[1], STDOUT_FILENO) < 0)
-				return (0);
-			close(var.pipe_in[1]);
-			execve(var.cmds[i][0], var.cmds[i], env);
-		}
-		else
-		{
-			waitpid(child, &status, 0);
-			close(var.pipe_in[1]);
-//			ft_printf("status: %d", status);
-			if (dup2(var.pipe_in[0], STDIN_FILENO) < 0 || \
-					dup2(var.fd_out, STDOUT_FILENO) < 0)
-				return (0);
-			i++;
-			execve(var.cmds[i][0], var.cmds[i], env);
-		}
-	}
-	ft_clean_mem(&var);
+		ft_cmd_check(&var.cmds[i], folders - 1, av[i + 2]);
+	if (var.cmds[0])
+		ft_pipex(&var, ac - 4);
+	ft_clean_mem(&var, folders);
 	close(var.fd_in);
 	close(var.fd_out);
 }
