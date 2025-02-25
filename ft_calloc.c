@@ -1,34 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: miggarc2 <miggarc2@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/29 17:10:44 by miggarc2          #+#    #+#             */
-/*   Updated: 2025/02/25 20:45:37 by miggarc2         ###   ########.fr       */
+/*   Created: 2024/09/15 17:54:28 by miggarc2          #+#    #+#             */
+/*   Updated: 2024/09/15 18:35:25 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include <stdlib.h>
 
-# include "libft.h"
-# include <unistd.h>
-# include <stdio.h>
-# include <fcntl.h>
-# include <unistd.h>
-# include <sys/wait.h>
-# include <string.h>
-# include <errno.h>
-
-typedef struct s_var
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	int		*pipes;
-	int		fd_in;
-	int		fd_out;
-	char	**paths;
-	char	***cmds;
-}			t_var;
+	unsigned char	*r;
+	int				total_size;
 
-#endif
+	total_size = nmemb * size;
+	r = (unsigned char *)malloc(total_size);
+	if (!r)
+		return (0);
+	while (total_size-- > 0)
+		r[total_size] = 0;
+	return (r);
+}

@@ -1,34 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: miggarc2 <miggarc2@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/29 17:10:44 by miggarc2          #+#    #+#             */
-/*   Updated: 2025/02/25 20:45:37 by miggarc2         ###   ########.fr       */
+/*   Created: 2024/09/15 17:54:28 by miggarc2          #+#    #+#             */
+/*   Updated: 2024/09/19 00:19:06 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "libft.h"
 
-# include "libft.h"
-# include <unistd.h>
-# include <stdio.h>
-# include <fcntl.h>
-# include <unistd.h>
-# include <sys/wait.h>
-# include <string.h>
-# include <errno.h>
-
-typedef struct s_var
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	int		*pipes;
-	int		fd_in;
-	int		fd_out;
-	char	**paths;
-	char	***cmds;
-}			t_var;
+	char	*join;
+	size_t	size1;
+	size_t	size2;
+	size_t	i;
 
-#endif
+	size1 = 0;
+	size2 = 0;
+	i = 0;
+	while (s1[size1])
+		size1++;
+	while (s2[size2])
+		size2++;
+	join = (char *)malloc(sizeof(char) * (size1 + size2 + 1));
+	if (!join)
+		return (0);
+	while (*s1)
+		join[i++] = *s1++;
+	while (*s2)
+		join[i++] = *s2++;
+	join[i] = 0;
+	return (join);
+}

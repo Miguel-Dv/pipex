@@ -1,34 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_lstnew_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: miggarc2 <miggarc2@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/29 17:10:44 by miggarc2          #+#    #+#             */
-/*   Updated: 2025/02/25 20:45:37 by miggarc2         ###   ########.fr       */
+/*   Created: 2024/09/15 17:54:28 by miggarc2          #+#    #+#             */
+/*   Updated: 2024/09/17 00:31:44 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "libft.h"
 
-# include "libft.h"
-# include <unistd.h>
-# include <stdio.h>
-# include <fcntl.h>
-# include <unistd.h>
-# include <sys/wait.h>
-# include <string.h>
-# include <errno.h>
-
-typedef struct s_var
+t_list	*ft_lstnew(void *content)
 {
-	int		*pipes;
-	int		fd_in;
-	int		fd_out;
-	char	**paths;
-	char	***cmds;
-}			t_var;
+	t_list	*node;
 
-#endif
+	node = (t_list *)malloc(sizeof(t_list));
+	if (!node)
+		return (0);
+	node->content = content;
+	node->next = 0;
+	return (node);
+}

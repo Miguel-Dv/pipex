@@ -1,34 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: miggarc2 <miggarc2@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/29 17:10:44 by miggarc2          #+#    #+#             */
-/*   Updated: 2025/02/25 20:45:37 by miggarc2         ###   ########.fr       */
+/*   Created: 2024/09/15 17:54:28 by miggarc2          #+#    #+#             */
+/*   Updated: 2024/09/24 19:03:59 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include <unistd.h>
 
-# include "libft.h"
-# include <unistd.h>
-# include <stdio.h>
-# include <fcntl.h>
-# include <unistd.h>
-# include <sys/wait.h>
-# include <string.h>
-# include <errno.h>
-
-typedef struct s_var
+void	ft_putnbr_fd(int n, int fd)
 {
-	int		*pipes;
-	int		fd_in;
-	int		fd_out;
-	char	**paths;
-	char	***cmds;
-}			t_var;
+	char	c;
 
-#endif
+	if (n == -2147483648)
+	{
+		write(fd, "-2147483648", 11);
+		return ;
+	}
+	if (n < 0)
+	{
+		if (write (fd, "-", 1) == -1)
+			return ;
+		n *= -1;
+	}
+	if (n > 9)
+		ft_putnbr_fd(n / 10, fd);
+	c = n % 10 + 48;
+	write(fd, &c, 1);
+}

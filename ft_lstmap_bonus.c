@@ -1,34 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_lstmap_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: miggarc2 <miggarc2@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/29 17:10:44 by miggarc2          #+#    #+#             */
-/*   Updated: 2025/02/25 20:45:37 by miggarc2         ###   ########.fr       */
+/*   Created: 2024/09/15 17:54:28 by miggarc2          #+#    #+#             */
+/*   Updated: 2024/09/20 20:30:07 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "libft.h"
 
-# include "libft.h"
-# include <unistd.h>
-# include <stdio.h>
-# include <fcntl.h>
-# include <unistd.h>
-# include <sys/wait.h>
-# include <string.h>
-# include <errno.h>
-
-typedef struct s_var
+t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
-	int		*pipes;
-	int		fd_in;
-	int		fd_out;
-	char	**paths;
-	char	***cmds;
-}			t_var;
+	t_list	*rslt_lst;
+	t_list	*tmp_node;
 
-#endif
+	if (!f || !del)
+		return (0);
+	rslt_lst = 0;
+	while (lst)
+	{
+		tmp_node = ft_lstnew(f(lst->content));
+		if (!tmp_node)
+		{
+			ft_lstclear(&rslt_lst, del);
+			return (0);
+		}
+		ft_lstadd_back(&rslt_lst, tmp_node);
+		lst = lst->next;
+	}
+	return (rslt_lst);
+}
