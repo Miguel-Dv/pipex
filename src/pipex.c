@@ -6,13 +6,13 @@
 /*   By: miggarc2 <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 19:02:08 by miggarc2          #+#    #+#             */
-/*   Updated: 2025/02/25 01:57:20 by miggarc2         ###   ########.fr       */
+/*   Updated: 2025/02/25 15:33:13 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	ft_clean_mem(t_var *var, char **folders)
+void	ft_clean(t_var *var, char **folders, char **av, _Bool heredoc)
 {
 	int	i;
 	int	j;
@@ -36,37 +36,13 @@ void	ft_clean_mem(t_var *var, char **folders)
 			free(folders[i++]);
 		free(folders);
 	}
+	close(var->fd_in);
+	close(var->fd_out);
+	if (heredoc)
+		unlink(av[1]);
 }
 
 //void	ft_error_handle(
-
-void	ft_cmd_check(char ***args, char **folders, char *av)
-{
-	char	*tmp;
-	char	*cmd;
-
-	*args = ft_split(av, ' ');
-	while (*(++folders))
-	{
-		if (strncmp(*args[0], "/", 1) != 0)
-		{
-			tmp = ft_strjoin(*folders, "/");
-			cmd = ft_strjoin(tmp, *args[0]);
-			free(tmp);
-		}
-		else
-			cmd = ft_strdup(*args[0]);
-		if (access(cmd, X_OK) == 0)
-			break ;
-		else
-			free(cmd);
-	}
-	tmp = *args[0];
-	*args[0] = cmd;
-	free(tmp);
-	if (!*folders)
-		exit(EXIT_FAILURE);
-}
 
 void	ft_exec_child(t_var *var, int i, int end)
 {
@@ -118,6 +94,71 @@ void	ft_pipex(t_var *var, int end)
 	free(var->pipes);
 }
 
+void	ft_cmd_check(char ***args, char **folders, char *av)
+{
+	char	*tmp;
+	char	*cmd;
+
+	*args = ft_split(av, ' ');
+	while (*(++folders))
+	{
+		if (strncmp(*args[0], "/", 1) != 0)
+		{
+			tmp = ft_strjoin(*folders, "/");
+			cmd = ft_strjoin(tmp, *args[0]);
+			free(tmp);
+		}
+		else
+			cmd = ft_strdup(*args[0]);
+		if (access(cmd, X_OK) == 0)
+			break ;
+		else
+			free(cmd);
+	}
+	tmp = *args[0];
+	*args[0] = cmd;
+	free(tmp);
+	if (!*folders)
+		exit(EXIT_FAILURE);
+}
+
+void	ft_open_fds(t_var *var, char **av, int ac, _Bool heredoc)
+{
+	char	*line;
+
+	if (heredoc)
+	{
+		line = NULL;
+		var->fd_in = open(av[1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (!var->fd_in)
+			exit(EXIT_FAILURE);
+		while(1)
+		{
+			ft_printf("pipex heredoc> ");
+			line = get_next_line(STDIN_FILENO);
+			perror("line");
+			if (!line)
+				exit(EXIT_FAILURE);
+			if (!strncmp(line, av[2], ft_strlen(av[2])))
+				close(STDIN_FILENO);
+			else
+				ft_putstr_fd(line, var->fd_in);
+			free(line);
+		}
+		close(var->fd_in);
+	}
+	var->fd_in = open(av[1], O_RDONLY);
+	if (var->fd_out < 0)
+        exit(EXIT_FAILURE);
+	if (heredoc)
+	    var->fd_out = open(av[ac - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
+	else
+		var->fd_out = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (var->fd_out < 0)
+        exit(EXIT_FAILURE);
+	exit(EXIT_SUCCESS);
+}
+
 int	main(int ac, char **av, char **env)
 {
 	int		i;
@@ -126,10 +167,7 @@ int	main(int ac, char **av, char **env)
 
 	if (ac < 5)
 		return (0);
-	var.fd_in = open(av[1], O_RDONLY);
-	var.fd_out = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (var.fd_in < 0 || var.fd_out < 0)
-		return (0);
+	ft_open_fds(&var, av, ac, !ft_strncmp(av[1], "here_doc", 9));
 	var.cmds = (char ***)ft_calloc(ac - 2, sizeof(char **));
 	i = 0;
 	while (env[i] && ft_strncmp(env[i], "PATH=", 5))
@@ -142,7 +180,5 @@ int	main(int ac, char **av, char **env)
 		ft_cmd_check(&var.cmds[i], folders - 1, av[i + 2]);
 	if (var.cmds[0])
 		ft_pipex(&var, ac - 4);
-	ft_clean_mem(&var, folders);
-	close(var.fd_in);
-	close(var.fd_out);
+	ft_clean(&var, folders, av, !ft_strncmp(av[1], "here_doc", 9));
 }

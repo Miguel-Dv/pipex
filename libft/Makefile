@@ -6,7 +6,7 @@
 #    By: miggarc2 <miggarc2@student.42barcelona.co  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/18 19:51:13 by miggarc2          #+#    #+#              #
-#    Updated: 2024/12/21 19:33:50 by miggarc2         ###   ########.fr        #
+#    Updated: 2025/02/25 15:37:41 by miggarc2         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ SRC= ft_atoi.c ft_strlcat.c  ft_bzero.c ft_strlcpy.c  ft_tolower.c ft_memchr.c \
 	 ft_lstclear_bonus.c ft_lstiter_bonus.c ft_lstmap_bonus.c \
 	 ft_lstsize_bonus.c ft_lstadd_front_bonus.c ft_lstdelone_bonus.c \
 	 ft_lstlast_bonus.c ft_lstnew_bonus.c ft_printf_bonus.c \
-	 ft_printf_utils_bonus.c ft_printf_utils2_bonus.c
+	 ft_printf_utils_bonus.c ft_printf_utils2_bonus.c get_next_line_bonus.c
 
 OBJ= ${SRC:.c=.o}
 

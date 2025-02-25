@@ -6,12 +6,16 @@
 /*   By: miggarc2 <miggarc2@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 22:59:26 by miggarc2          #+#    #+#             */
-/*   Updated: 2024/12/24 17:33:32 by miggarc2         ###   ########.fr       */
+/*   Updated: 2025/02/25 13:36:35 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1024
+# endif
 
 # include <stddef.h>
 # include <stdlib.h>
@@ -19,6 +23,7 @@
 # include <stdint.h>
 # include <stdarg.h>
 # include <unistd.h>
+# include <stdio.h>
 
 typedef struct s_list
 {
@@ -88,5 +93,7 @@ void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
 int		ft_printf(char const *fmt, ...);
+
+char	*get_next_line(int fd);
 
 #endif
