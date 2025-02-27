@@ -6,7 +6,7 @@
 /*   By: miggarc2 <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 18:19:05 by miggarc2          #+#    #+#             */
-/*   Updated: 2024/09/19 13:47:55 by miggarc2         ###   ########.fr       */
+/*   Updated: 2025/02/26 18:28:56 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,6 @@ void	ft_bzero(void *s, size_t n)
 
 	i = 0;
 	tmp = (unsigned char *)s;
-	while (i < n)
+	while (s && i < n)
 		tmp[i++] = '\0';
 }

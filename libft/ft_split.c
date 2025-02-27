@@ -6,39 +6,41 @@
 /*   By: miggarc2 <miggarc2@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 17:54:28 by miggarc2          #+#    #+#             */
-/*   Updated: 2024/09/19 00:00:26 by miggarc2         ###   ########.fr       */
+/*   Updated: 2025/02/26 23:27:37 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
 static size_t	ft_word_len(char const *s, char c)
 {
-	size_t	i;
+	size_t	len;
 
-	i = 0;
-	while (s[i] && s[i] != c)
-		i++;
-	return (i);
+	len = 0;
+	while (s && s[len] && s[len] != c)
+		len++;
+	return (len);
 }
 
 static int	ft_word_count(char const *s, char c)
 {
-	int	size;
+	int	i;
+	int	count;
 
-	size = 0;
-	while (*s)
+	i = 0;
+	count = 0;
+	while (s && s[i])
 	{
-		if (*s != c)
+		if (s[i] != c)
 		{
-			size++;
-			while (*s && *s != c)
-				s++;
+			count++;
+			while (s[i] && s[i] != c)
+				i++;
 		}
-		while (*s == c)
-			s++;
+		while (s[i] == c)
+			i++;
 	}
-	return (size);
+	return (count);
 }
 
 static int	ft_fill_words(char const *s, char **split, char c, int size)
@@ -48,12 +50,12 @@ static int	ft_fill_words(char const *s, char **split, char c, int size)
 	size_t	i;
 
 	word = 0;
-	while (*s && word < size)
+	while (s && *s && word < size)
 	{
 		while (*s && *s == c)
 			s++;
 		len = ft_word_len(s, c);
-		split[word] = (char *)malloc(sizeof(char) * (len + 1));
+		split[word] = (char *)ft_calloc(len + 1, sizeof(char));
 		if (!split[word])
 		{
 			while (--word >= 0)
@@ -73,20 +75,20 @@ static int	ft_fill_words(char const *s, char **split, char c, int size)
 char	**ft_split(char const *s, char c)
 {
 	char	**split;
-	int		size;
+	int		count;
 
-	size = 0;
-	if (*s && c)
-		size = ft_word_count(s, c);
-	else if (*s)
-		size++;
-	split = (char **)malloc(sizeof(char *) * (size + 1));
+	count = 0;
+	if (s && *s && c)
+		count = ft_word_count(s, c);
+	else if (s && *s)
+		count++;
+	split = (char **)ft_calloc(count + 1, sizeof(char *));
 	if (!split)
 		return (0);
-	if (!ft_fill_words(s, split, c, size))
+	if (!ft_fill_words(s, split, c, count))
 	{
 		free(split);
-		return (0);
+		split = NULL;
 	}
 	return (split);
 }

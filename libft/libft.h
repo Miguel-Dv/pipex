@@ -6,7 +6,7 @@
 /*   By: miggarc2 <miggarc2@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 22:59:26 by miggarc2          #+#    #+#             */
-/*   Updated: 2025/02/25 13:36:35 by miggarc2         ###   ########.fr       */
+/*   Updated: 2025/02/26 21:29:19 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 # include <stdint.h>
 # include <stdarg.h>
 # include <unistd.h>
-# include <stdio.h>
 
 typedef struct s_list
 {

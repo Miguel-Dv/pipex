@@ -6,11 +6,11 @@
 /*   By: miggarc2 <miggarc2@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 17:54:28 by miggarc2          #+#    #+#             */
-/*   Updated: 2024/09/15 18:35:25 by miggarc2         ###   ########.fr       */
+/*   Updated: 2025/02/26 21:47:22 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
 void	*ft_calloc(size_t nmemb, size_t size)
 {

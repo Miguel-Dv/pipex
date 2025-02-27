@@ -6,7 +6,7 @@
 /*   By: miggarc2 <miggarc2@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 17:54:28 by miggarc2          #+#    #+#             */
-/*   Updated: 2024/09/19 00:19:06 by miggarc2         ###   ########.fr       */
+/*   Updated: 2025/02/26 23:41:57 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,21 @@
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*join;
-	size_t	size1;
-	size_t	size2;
-	size_t	i;
+	int		size1;
+	int		size2;
+	int		i;
+	int		j;
 
-	size1 = 0;
-	size2 = 0;
-	i = 0;
-	while (s1[size1])
-		size1++;
-	while (s2[size2])
-		size2++;
-	join = (char *)malloc(sizeof(char) * (size1 + size2 + 1));
+	size1 = ft_strlen(s1);
+	size2 = ft_strlen(s2);
+	join = (char *)ft_calloc(size1 + size2 + 1, sizeof(char));
 	if (!join)
 		return (0);
-	while (*s1)
-		join[i++] = *s1++;
-	while (*s2)
-		join[i++] = *s2++;
-	join[i] = 0;
+	i = -1;
+	while (++i < size1)
+		join[i] = s1[i];
+	j = -1;
+	while (++j < size2)
+		join[i + j] = s2[j];
 	return (join);
 }
