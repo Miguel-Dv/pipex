@@ -6,7 +6,7 @@
 /*   By: miggarc2 <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 19:02:08 by miggarc2          #+#    #+#             */
-/*   Updated: 2025/02/28 09:36:55 by miggarc2         ###   ########.fr       */
+/*   Updated: 2025/02/28 11:04:43 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	ft_err_chk(t_var *var, char *err1, char *err2, int to_exit_err)
 	}
 	if (to_exit_err && var->hdoc)
 		unlink("here_doc");
-	if (to_exit_err && access(".empty_file", F_OK))
+	if (to_exit_err && !access(".empty_file", F_OK))
 		unlink(".empty_file");
 	if (to_exit_err)
 		exit(EXIT_FAILURE);

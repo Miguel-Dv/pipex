@@ -6,7 +6,7 @@
 /*   By: miggarc2 <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 19:02:08 by miggarc2          #+#    #+#             */
-/*   Updated: 2025/02/28 10:14:19 by miggarc2         ###   ########.fr       */
+/*   Updated: 2025/02/28 11:03:46 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	ft_start_args(t_var *var, char **av, int ac)
 	if (var->fd_in < 0)
 	{
 		ft_err_chk(var, av[1 + var->hdoc], ": no such file or directory\n", 0);
-		var->fd_in = open(".empty_file", O_CREAT, O_TRUNC, 0644);
+		var->fd_in = open(".empty_file", O_CREAT, 0644);
 	}
 	if (var->hdoc)
 		var->fd_out = open(av[ac - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
