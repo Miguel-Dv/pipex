@@ -6,7 +6,7 @@
 #    By: miggarc2 <miggarc2@student.42barcelona.co  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/18 19:51:13 by miggarc2          #+#    #+#              #
-#    Updated: 2025/02/26 18:15:17 by miggarc2         ###   ########.fr        #
+#    Updated: 2025/02/28 10:02:11 by miggarc2         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,15 +14,25 @@ CC= cc
 CFLAGS= -Wall -Wextra -Werror -I includes -I libft 
 RM= rm -f
 NAME= pipex
-INC= pipex.h
 LIB= libft/libft.a
-SRC= src/pipex.c
 OBJ= ${SRC:.c=.o}
+BONUS=
+
+ifdef BONUS
+	INC= pipex_bonus.h
+	SRC= src/pipex_bonus.c src/pipex_input_bonus.c
+else
+	INC= pipex.h
+	SRC= src/pipex.c src/pipex_input.c
+endif
 
 %.o: %.c $(INC) Makefile
 	$(CC) $(CFLAGS) -c $< -o $@
 
 all: makelibft $(NAME)
+
+bonus:
+	@make BONUS=true
 
 makelibft:
 	make -C libft
