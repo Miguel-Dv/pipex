@@ -6,7 +6,7 @@
 /*   By: miggarc2 <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 19:02:08 by miggarc2          #+#    #+#             */
-/*   Updated: 2025/02/28 11:03:46 by miggarc2         ###   ########.fr       */
+/*   Updated: 2025/03/03 03:40:08 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,6 @@ int	main(int ac, char **av, char **env)
 	if (var.hdoc)
 		ft_open_heredoc(&var, av[2], ft_strlen(av[2]));
 	ft_start_args(&var, av, ac);
-	ft_pipex(&var, ac - 4 - var.hdoc);
+	ft_pipex(&var, ac - 4 - var.hdoc, env);
 	ft_err_chk(&var, NULL, NULL, 1);
 }

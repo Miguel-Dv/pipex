@@ -6,7 +6,7 @@
 /*   By: miggarc2 <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 19:02:08 by miggarc2          #+#    #+#             */
-/*   Updated: 2025/02/28 11:04:43 by miggarc2         ###   ########.fr       */
+/*   Updated: 2025/03/03 03:40:31 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	ft_err_chk(t_var *var, char *err1, char *err2, int to_exit_err)
 		exit(EXIT_FAILURE);
 }
 
-void	ft_exec_child(t_var *var, int i, int end)
+void	ft_exec_child(t_var *var, int i, int end, char **env)
 {
 	if (i == 0)
 	{
@@ -89,10 +89,10 @@ void	ft_exec_child(t_var *var, int i, int end)
 		if (dup2(var->fd_out, STDOUT_FILENO) < 0)
 			ft_err_chk(var, strerror(errno), "\n", 1);
 	}
-	execve(var->cmds[i][0], var->cmds[i], NULL);
+	execve(var->cmds[i][0], var->cmds[i], env);
 }
 
-void	ft_pipex(t_var *var, int end)
+void	ft_pipex(t_var *var, int end, char **env)
 {
 	int		i;
 	int		status;
@@ -110,7 +110,7 @@ void	ft_pipex(t_var *var, int end)
 		if (child < 0)
 			ft_err_chk(var, "child: ", strerror(errno), 1);
 		else if (child == 0)
-			ft_exec_child(var, i, end);
+			ft_exec_child(var, i, end, env);
 		else if (i < end)
 			close(var->pipes[2 * i + 1]);
 		waitpid(child, &status, 0);
