@@ -6,11 +6,11 @@
 /*   By: miggarc2 <miggarc2@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 17:54:28 by miggarc2          #+#    #+#             */
-/*   Updated: 2024/09/15 23:27:14 by miggarc2         ###   ########.fr       */
+/*   Updated: 2025/03/03 19:46:30 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
 static int	ft_is_set(char const c, char const *set)
 {

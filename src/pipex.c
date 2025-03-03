@@ -6,7 +6,7 @@
 /*   By: miggarc2 <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 19:02:08 by miggarc2          #+#    #+#             */
-/*   Updated: 2025/03/03 03:40:31 by miggarc2         ###   ########.fr       */
+/*   Updated: 2025/03/03 19:19:42 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	ft_clean(t_var *var)
 	}
 }
 
-void	ft_err_chk(t_var *var, char *err1, char *err2, int to_exit_err)
+void	ft_err_chk(t_var *var, char *err1, char *err2, int to_exit)
 {
 	if (err1 || err2)
 	{
@@ -46,22 +46,22 @@ void	ft_err_chk(t_var *var, char *err1, char *err2, int to_exit_err)
 		ft_putstr_fd(err1, STDERR_FILENO);
 		ft_putstr_fd(err2, STDERR_FILENO);
 	}
-	if (to_exit_err && var)
+	if (to_exit)
 	{
-		ft_clean(var);
+		if (access("here_doc", F_OK) == 0)
+			unlink("here_doc");
+		if (access(".empty_file", F_OK) == 0)
+			unlink(".empty_file");
 		if (var->pipes)
 			free(var->pipes);
 		if (var->fd_in > 0)
 			close(var->fd_in);
 		if (var->fd_out > 0)
 			close(var->fd_out);
+		if (var)
+			ft_clean(var);
+		exit(to_exit);
 	}
-	if (to_exit_err && var->hdoc)
-		unlink("here_doc");
-	if (to_exit_err && !access(".empty_file", F_OK))
-		unlink(".empty_file");
-	if (to_exit_err)
-		exit(EXIT_FAILURE);
 }
 
 void	ft_exec_child(t_var *var, int i, int end, char **env)
@@ -90,31 +90,34 @@ void	ft_exec_child(t_var *var, int i, int end, char **env)
 			ft_err_chk(var, strerror(errno), "\n", 1);
 	}
 	execve(var->cmds[i][0], var->cmds[i], env);
+	ft_err_chk(var, var->cmds[i][0], strerror(errno), errno);
 }
 
-void	ft_pipex(t_var *var, int end, char **env)
+int	ft_pipex(t_var *var, int end, char **env)
 {
 	int		i;
+	int		to_exit;
 	int		status;
 	pid_t	child;
 
 	var->pipes = (int *)ft_calloc(end * 2, sizeof(int));
 	if (!var->pipes)
-		ft_err_chk(var, "pipes fd: ", strerror(errno), 1);
+		ft_err_chk(var, strerror(errno), "\n", 1);
 	i = -1;
 	while (var->cmds[++i])
 	{
 		if (i < end && pipe(&var->pipes[2 * i]) < 0)
-			ft_err_chk(var, "pipes fd: ", strerror(errno), 1);
+			ft_err_chk(var, strerror(errno), "\n", 1);
 		child = fork();
 		if (child < 0)
-			ft_err_chk(var, "child: ", strerror(errno), 1);
+			ft_err_chk(var, strerror(errno), "\n", 1);
 		else if (child == 0)
 			ft_exec_child(var, i, end, env);
-		else if (i < end)
+		if (i < end)
 			close(var->pipes[2 * i + 1]);
-		waitpid(child, &status, 0);
-		if (!WIFEXITED(status))
-			ft_err_chk(var, strerror(errno), "\n", 1);
 	}
+	while (i--)
+		if (waitpid(-1, &status, 0) == child && WIFEXITED(status))
+			to_exit = WEXITSTATUS(status);
+	return (to_exit);
 }
