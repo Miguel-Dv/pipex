@@ -6,7 +6,7 @@
 /*   By: miggarc2 <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 19:02:08 by miggarc2          #+#    #+#             */
-/*   Updated: 2025/03/03 20:24:23 by miggarc2         ###   ########.fr       */
+/*   Updated: 2025/03/04 23:48:50 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	ft_open_heredoc(t_var *var, char *limit, size_t limit_len)
 
 	here_fd = open("here_doc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (here_fd < 0)
-		ft_err_chk(var, strerror(errno), "here_doc\n", 1);
+		ft_exit(var, ft_perror("", strerror(errno), "\n", errno));
 	while (1)
 	{
 		ft_putstr_fd("pipex heredoc> ", STDOUT_FILENO);
@@ -64,7 +64,7 @@ char	*ft_cmd_resolve(t_var *var, int i)
 	if (var->paths[j])
 		free(var->cmds[i][0]);
 	else
-		return(var->cmds[i][0]);
+		return (var->cmds[i][0]);
 	return (cmd);
 }
 
@@ -74,22 +74,22 @@ void	ft_start_args(t_var *var, char **av, int ac)
 
 	var->fd_in = open(av[1], O_RDONLY);
 	if (var->fd_in < 0)
-		ft_err_chk(var, strerror(errno), "\n", 0);
+		ft_perror("", strerror(errno), "\n", errno);
 	if (var->hdoc)
 		var->fd_out = open(av[ac - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else
 		var->fd_out = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (var->fd_out < 0)
-		ft_err_chk(var, strerror(errno), "\n", 1);
+		ft_exit(var, ft_perror("", strerror(errno), "\n", errno));
 	var->cmds = (char ***)ft_calloc(ac - 2 - var->hdoc, sizeof(char **));
 	if (!var->cmds)
-		ft_err_chk(var, strerror(errno), "\n", 1);
+		ft_exit(var, ft_perror("", strerror(errno), "\n", errno));
 	i = -1;
 	while (++i <= ac - 4 - var->hdoc)
 	{
 		var->cmds[i] = ft_split(av[i + 2 + var->hdoc], ' ');
 		if (!var->cmds[i])
-			ft_err_chk(var, strerror(errno), "\n", 1);
+			ft_exit(var, ft_perror("", strerror(errno), "\n", errno));
 		var->cmds[i][0] = ft_cmd_resolve(var, i);
 	}
 }
@@ -97,26 +97,27 @@ void	ft_start_args(t_var *var, char **av, int ac)
 int	main(int ac, char **av, char **env)
 {
 	int		i;
-	int		to_exit;
 	t_var	var;
 
 	ft_bzero(&var, sizeof(t_var));
-	if (ac > 1)
+	if (ac > 5)
 		var.hdoc = (_Bool) !strncmp(av[1], "here_doc", 9);
 	if (ac < 5 || (var.hdoc && ac < 6))
-		ft_err_chk(&var, "syntax error: ", \
-				"use \'.pipex [here_doc] infile cmd_1... cmd_n outfile\'\n", 1);
+		ft_exit(&var, ft_perror(" syntax: ", \
+				"... [here_doc] infile cmd_1... cmd_n outfile", "\n", 1));
 	i = 0;
 	while (env[i] && ft_strncmp(env[i], "PATH=", 5))
 		i++;
 	if (!env[i])
-		ft_err_chk(NULL, av[2 + var.hdoc], ": No such file or directory\n", 1);
+		ft_exit(&var, ft_perror("", strerror(errno), "\n", errno));
 	var.paths = ft_split(env[i] + 5, ':');
 	if (!var.paths)
-		ft_err_chk(&var, "ft_split paths: ", strerror(errno), 1);
+		ft_exit(&var, ft_perror("", strerror(errno), "\n", errno));
+	var.pipes = (int *)ft_calloc((ac - 4 - var.hdoc) * 2, sizeof(int));
+	if (!var.pipes)
+		ft_exit(&var, ft_perror("", strerror(errno), "\n", errno));
 	if (var.hdoc)
 		ft_open_heredoc(&var, av[2], ft_strlen(av[2]));
 	ft_start_args(&var, av, ac);
-	to_exit = ft_pipex(&var, ac - 4 - var.hdoc, env);
-	ft_err_chk(&var, NULL, NULL, to_exit);
+	ft_exit(&var, ft_pipex(&var, ac - 4 - var.hdoc, env));
 }
