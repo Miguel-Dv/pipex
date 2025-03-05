@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: miggarc2 <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 19:02:08 by miggarc2          #+#    #+#             */
-/*   Updated: 2025/03/05 20:26:40 by miggarc2         ###   ########.fr       */
+/*   Updated: 2025/03/05 20:26:44 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 int	ft_perror(char *err1, char *err2, char *err3, int err_no)
 {
@@ -39,6 +39,8 @@ void	ft_exit(t_var *var, int exit_code)
 {
 	int	i;
 
+	if (access("here_doc", F_OK) == 0)
+		unlink("here_doc");
 	if (var->pipes)
 		free(var->pipes);
 	if (var->fd_in > 0)
