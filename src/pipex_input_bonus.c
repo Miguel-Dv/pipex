@@ -6,7 +6,7 @@
 /*   By: miggarc2 <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 19:02:08 by miggarc2          #+#    #+#             */
-/*   Updated: 2025/03/05 20:05:35 by miggarc2         ###   ########.fr       */
+/*   Updated: 2025/03/06 21:37:52 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	ft_open_heredoc(t_var *var, char *limit, size_t limit_len)
 		line = get_next_line(STDIN_FILENO);
 		if (!line)
 			break ;
-		if (strncmp(line, limit, limit_len) == 0 && line[limit_len] == '\n')
+		if (ft_strncmp(line, limit, limit_len) == 0 && line[limit_len] == '\n')
 		{
 			close(STDIN_FILENO);
 			free(line);
@@ -49,7 +49,7 @@ char	*ft_cmd_resolve(t_var *var, int i)
 	j = -1;
 	while (var->paths[++j])
 	{
-		if (var->cmds[i][0] && strncmp(var->cmds[i][0], "/", 1))
+		if (var->cmds[i][0] && ft_strncmp(var->cmds[i][0], "/", 1))
 		{
 			tmp = ft_strjoin(var->paths[j], "/");
 			cmd = ft_strjoin(tmp, var->cmds[i][0]);
@@ -101,7 +101,7 @@ int	main(int ac, char **av, char **env)
 
 	ft_bzero(&var, sizeof(t_var));
 	if (ac > 5)
-		var.hdoc = (_Bool) !strncmp(av[1], "here_doc", 9);
+		var.hdoc = (_Bool) !ft_strncmp(av[1], "here_doc", 9);
 	if (ac < 5 || (var.hdoc && ac < 6))
 		ft_exit(&var, ft_perror(" syntax: ", \
 				"./pipex [here_doc] infile cmd_1... cmd_n outfile", "", 1));

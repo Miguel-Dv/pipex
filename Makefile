@@ -6,7 +6,7 @@
 #    By: miggarc2 <miggarc2@student.42barcelona.co  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/18 19:51:13 by miggarc2          #+#    #+#              #
-#    Updated: 2025/02/28 10:02:11 by miggarc2         ###   ########.fr        #
+#    Updated: 2025/03/06 21:45:21 by miggarc2         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ else
 	SRC= src/pipex.c src/pipex_input.c
 endif
 
-%.o: %.c $(INC) Makefile
+%.o: %.c $(INC)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 all: makelibft $(NAME)
@@ -37,8 +37,8 @@ bonus:
 makelibft:
 	make -C libft
 
-$(NAME): $(OBJ) $(LIB)
-	$(CC) $(CFLAGS) $^ $(LIB) -o $@
+$(NAME): $(OBJ) $(LIB) Makefile
+	$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $@
 
 clean:
 	make -C libft clean

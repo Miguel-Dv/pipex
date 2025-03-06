@@ -6,7 +6,7 @@
 /*   By: miggarc2 <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 19:02:08 by miggarc2          #+#    #+#             */
-/*   Updated: 2025/03/05 20:21:06 by miggarc2         ###   ########.fr       */
+/*   Updated: 2025/03/06 21:39:29 by miggarc2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*ft_cmd_resolve(t_var *var, int i)
 	j = -1;
 	while (var->paths[++j])
 	{
-		if (var->cmds[i][0] && strncmp(var->cmds[i][0], "/", 1))
+		if (var->cmds[i][0] && ft_strncmp(var->cmds[i][0], "/", 1))
 		{
 			tmp = ft_strjoin(var->paths[j], "/");
 			cmd = ft_strjoin(tmp, var->cmds[i][0]);
@@ -71,7 +71,7 @@ int	main(int ac, char **av, char **env)
 	ft_bzero(&var, sizeof(t_var));
 	if (ac != 5)
 		ft_exit(&var, ft_perror(" syntax: ", \
-				"./pipex infile cmd_1... cmd_n outfile", "", 1));
+				"./pipex infile cmd_1 cmd_2 outfile", "", 1));
 	i = 0;
 	while (env[i] && ft_strncmp(env[i], "PATH=", 5))
 		i++;
